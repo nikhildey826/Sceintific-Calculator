@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Elite Neon Scientific Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+    /* Neon flicker for outer glow */
+    @keyframes neonFlicker {
+      0%, 100% { box-shadow: 0 0 20px #00fff7, 0 0 40px #00eaff, 0 0 60px #00d9ff; }
+      50% { box-shadow: 0 0 35px #00d4ff, 0 0 55px #00c4ff, 0 0 80px #00b3ff; }
+    }
+
+    /* Button glow on hover */
+    @keyframes buttonGlow {
+      0%, 100% {
+        box-shadow: 0 0 8px #00f9ff, 0 0 15px #00f9ff, 0 0 20px #00e8ff;
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 18px #00ffff, 0 0 35px #00ffff, 0 0 50px #00ffff;
+        transform: scale(1.07);
+      }
+    }
+
+    /* Press effect */
+    @keyframes buttonPress {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(0.92); box-shadow: inset 0 0 30px #00aaff; }
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #020417 0%, #000011 90%);
+      font-family: 'Orbitron', sans-serif;
+      user-select: none;
+      color: #00fff7;
+    }
+
+    .calculator {
+      width: 440px;
+      background: linear-gradient(145deg, #001021, #002038);
+      border-radius: 35px;
+      padding: 35px 30px;
+      box-shadow:
+        0 0 30px #00fff7,
+        0 0 60px #00cfff,
+        inset 0 0 80px #007a9f;
+      animation: neonFlicker 4s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #00f0ff;
+      backdrop-filter: blur(12px);
+    }
+
+    /* Glass effect overlay */
+    .calculator::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 80%);
+      border-radius: 35px;
+      filter: blur(4px);
+      mix-blend-mode: screen;
+      z-index: 1;
+    }
+
+    .display {
+      background: rgba(0, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 28px 25px;
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #00f9ff;
+      text-shadow:
+        0 0 10px #00eaff,
+        0 0 25px #00eaff,
+        0 0 40px #00aaff;
+      box-shadow:
+        inset 0 0 30px #00eaff88,
+        0 0 30px #00f0ffaa;
+      text-align: right;
+      min-height: 70px;
+      margin-bottom: 32px;
+      z-index: 2;
+      position: relative;
+      overflow-x: auto;
+      user-select: text;
+      letter-spacing: 2px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+      z-index: 2;
+      position: relative;
+    }
+
+    button {
+      background: linear-gradient(145deg, #003450, #004d78);
+      border-radius: 15px;
+      border: 1.8px solid #00ccff;
+      color: #00eeff;
+      font-size: 1.25rem;
+      font-weight: 700;
+      padding: 20px 0;
+      cursor: pointer;
+      box-shadow:
+        0 0 12px #00ccff88,
+        inset 0 0 15px #00ccffaa;
+      transition: all 0.3s ease;
+      text-shadow:
+        0 0 8px #00ccffbb,
+        0 0 12px #00ccffbb;
+      user-select: none;
+      outline-offset: 3px;
+      outline-color: transparent;
+      outline-style: solid;
+      outline-width: 3px;
+      letter-spacing: 0.1em;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    button:hover:not(:focus) {
+      animation: buttonGlow 1.8s infinite alternate;
+      background: linear-gradient(145deg, #00eaff, #007ea8);
+      color: #001f29;
+      text-shadow:
+        0 0 15px #00ffff,
+        0 0 40px #00ffff;
+      box-shadow:
+        0 0 30px #00ffff,
+        inset 0 0 35px #00ffff;
+      z-index: 10;
+      position: relative;
+    }
+
+    button:focus {
+      outline-color: #00ffffcc;
+      animation: glowPulse 1.5s infinite alternate;
+    }
+
+    button:active {
+      animation: buttonPress 0.3s;
+      box-shadow: inset 0 0 30px #00aaff;
+      background: linear-gradient(145deg, #008bb8, #004a6e);
+      color: #b5f7ff;
+      transform: scale(0.9);
+    }
+
+    .small-font {
+      font-size: 0.85rem;
+      color: #66ffff;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+    }
+
+    /* Scrollbar for display */
+    .display::-webkit-scrollbar {
+      height: 5px;
+    }
+    .display::-webkit-scrollbar-thumb {
+      background: #00f3ffcc;
+      border-radius: 10px;
+    }
+    .display::-webkit-scrollbar-track {
+      background: #00111f;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator" role="region" aria-label="Elite Neon Scientific Calculator">
+    <div class="display" id="display" aria-live="polite" aria-atomic="true" role="textbox" tabindex="0">0</div>
+    <div class="buttons">
+      <button onclick="clearDisplay()" class="small-font" aria-label="All Clear">AC</button>
+      <button onclick="deleteLast()" class="small-font" aria-label="Delete Last">DEL</button>
+      <button onclick="append('(')" class="small-font" aria-label="Open Parenthesis">(</button>
+      <button onclick="append(')')" class="small-font" aria-label="Close Parenthesis">)</button>
+      <button onclick="append('%')" class="small-font" aria-label="Modulo">%</button>
+
+      <button onclick="append('7')" aria-label="Number 7">7</button>
+      <button onclick="append('8')" aria-label="Number 8">8</button>
+      <button onclick="append('9')" aria-label="Number 9">9</button>
+      <button onclick="append('/')" class="small-font" aria-label="Divide">÷</button>
+      <button onclick="append('Math.sqrt(')" class="small-font" aria-label="Square Root">√</button>
+
+      <button onclick="append('4')" aria-label="Number 4">4</button>
+      <button onclick="append('5')" aria-label="Number 5">5</button>
+      <button onclick="append('6')" aria-label="Number 6">6</button>
+      <button onclick="append('*')" class="small-font" aria-label="Multiply">×</button>
+      <button onclick="append('**')" class="small-font" aria-label="Exponent">^</button>
+
+      <button onclick="append('1')" aria-label="Number 1">1</button>
+      <button onclick="append('2')" aria-label="Number 2">2</button>
+      <button onclick="append('3')" aria-label="Number 3">3</button>
+      <button onclick="append('-')" class="small-font" aria-label="Minus">−</button>
+      <button onclick="append('Math.log10(')" class="small-font" aria-label="Log Base 10">log</button>
+
+      <button onclick="append('0')" aria-label="Number 0">0</button>
+      <button onclick="append('.')" aria-label="Decimal Point">.</button>
+      <button onclick="append('Math.PI')" class="small-font" aria-label="Pi constant">π</button>
+      <button onclick="append('+')" class="small-font" aria-label="Plus">+</button>
+      <button onclick="calculate()" style="background:#00ffff; color:#001f29; font-weight:900;" aria-label="Calculate Result">=</button>
+
+      <button onclick="append('Math.sin(')" class="small-font" aria-label="Sine function">sin</button>
+      <button onclick="append('Math.cos(')" class="small-font" aria-label="Cosine function">cos</button>
+      <button onclick="append('Math.tan(')" class="small-font" aria-label="Tangent function">tan</button>
+      <button onclick="append('Math.E')" class="small-font" aria-label="Euler's Number">e</button>
+      <button onclick="append('Math.LN2')" class="small-font" aria-label="Natural log of 2">ln2</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+
+    function append(value) {
+      if (display.innerText === "0") display.innerText = "";
+      display.innerText += value;
+    }
+
+    function clearDisplay() {
+      display.innerText = "0";
+    }
+
+    function deleteLast() {
+      display.innerText = display.innerText.slice(0, -1) || "0";
+    }
+
+    function calculate() {
+      try {
+        let result = eval(display.innerText);
+
+        if (typeof result === "number") {
+          result = parseFloat(result.toFixed(12)); // round and trim decimals
+        }
+
+        display.innerText = result;
+      } catch {
+        display.innerText = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
